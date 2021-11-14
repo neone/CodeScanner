@@ -12,6 +12,7 @@ import SwiftUI
 /// To use, set `codeTypes` to be an array of things to scan for, e.g. `[.qr]`, and set `completion` to
 /// a closure that will be called when scanning has finished. This will be sent the string that was detected or a `ScanError`.
 /// For testing inside the simulator, set the `simulatedData` property to some test data you want to send back.
+@available(macCatalyst 14.0, *)
 public struct CodeScannerView: UIViewControllerRepresentable {
     public enum ScanError: Error {
         case badInput, badOutput
@@ -21,6 +22,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         case once, oncePerCode, continuous
     }
 
+    @available(macCatalyst 14.0, *)
     public class ScannerCoordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         var parent: CodeScannerView
         var codesFound: Set<String>
@@ -163,6 +165,7 @@ public struct CodeScannerView: UIViewControllerRepresentable {
         }
     }
     #else
+    @available(macCatalyst 14.0, *)
     public class ScannerViewController: UIViewController {
         var captureSession: AVCaptureSession!
         var previewLayer: AVCaptureVideoPreviewLayer!
@@ -354,8 +357,17 @@ public struct CodeScannerView: UIViewControllerRepresentable {
 
 struct CodeScannerView_Previews: PreviewProvider {
     static var previews: some View {
-        CodeScannerView(codeTypes: [.qr]) { result in
-            // do nothing
+        if #available(macCatalyst 14.0, *) {
+            CodeScannerView(codeTypes: [.qr]) { result in
+                // do nothing
+            }
+        } else {
+            #if !targetEnvironment(macCatalyst)
+            CodeScannerView(codeTypes: [.qr]) { result in
+                // do nothing
+            }
+            #endif
+            // Fallback on earlier versions
         }
     }
 }
