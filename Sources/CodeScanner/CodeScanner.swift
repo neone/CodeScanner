@@ -355,19 +355,11 @@ public struct CodeScannerView: UIViewControllerRepresentable {
     }
 }
 
+@available(macCatalyst 14.0, *)
 struct CodeScannerView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(macCatalyst 14.0, *) {
-            CodeScannerView(codeTypes: [.qr]) { result in
-                // do nothing
-            }
-        } else {
-            #if !targetEnvironment(macCatalyst)
-            CodeScannerView(codeTypes: [.qr]) { result in
-                // do nothing
-            }
-            #endif
-            // Fallback on earlier versions
+        CodeScannerView(codeTypes: [.qr]) { result in
+            // do nothing
         }
     }
 }
